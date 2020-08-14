@@ -1,49 +1,90 @@
 import React, { Component } from 'react';
-import axios from 'axios'
+import axios from 'axios';
 import './App.css';
 import Operations from './components/Operations';
-import Transactions from './components/Transactions'
+import Transactions from './components/Transactions';
+import Home from './components/Home';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import NavBar from './components/NavBar';
 
 class App extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
-      transactions: []
-    }
+      transactions: [],
+      open: false,
+    };
   }
 
   componentDidMount() {
-    this.refreshState()
+    this.refreshState();
   }
 
   async refreshState() {
-    const transactions = await axios.get('http://localhost:3001/transactions')
+    const transactions = await axios.get('http://localhost:3001/transactions');
     this.setState({
-      transactions: transactions.data
-    })
+      transactions: transactions.data,
+    });
   }
 
   addTransaction = async (transaction, operation) => {
-    transaction.amount = operation === '+' ? transaction.amount : (-transaction.amount)
-    await axios.post('http://localhost:3001/transaction', { transaction })
-    await this.refreshState()
-  }
+    transaction.amount =
+      operation === '+' ? transaction.amount : -transaction.amount;
+    if (this.getBalance() - transaction.amount <= 0) {
+      await axios.post('http://localhost:3001/transaction', { transaction });
+      await this.refreshState();
+    } else {
+      alert('insufficient funds');
+    }
+  };
 
   getBalance = () => {
     return this.state.transactions.length
       ? this.state.transactions.reduce((a, e) => a + e.amount, 0)
-      : "Loading"
-  }
+      : 'Loading';
+  };
 
   render() {
     return (
-      <div className="App">
-        <h1 className="balance">{this.getBalance()}</h1>
-        <Operations addTransaction={this.addTransaction} />
-        {this.state.transactions.length && <Transactions transactions={this.state.transactions} />}
-      </div>
-    )
+      <Router>
+        <div className='background'>
+          <div id="circle" className='circle-background'></div>
+          <NavBar />
+          <div className='App'>
+            <Route
+              exact
+              path='/'
+              render={() => (
+                <Home
+                  transactions={this.state.transactions.filter((t, i) => i < 6)}
+                  balance={this.getBalance()}
+                />
+              )}
+            />
+            <Route
+              exact
+              path='/add'
+              render={() => (
+                <Operations
+                  balance={this.getBalance()}
+                  addTransaction={this.addTransaction}
+                />
+              )}
+            />
+            <Route
+              exact
+              path='/log'
+              render={() =>
+                this.state.transactions.length && (
+                  <Transactions transactions={this.state.transactions} />
+                )
+              }
+            />
+          </div>
+        </div>
+      </Router>
+    );
   }
 }
 
-export default App
+export default App;

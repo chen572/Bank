@@ -1,6 +1,17 @@
+:root {
+  --primery-color: green;
+  --primery-text-color: #e5e5e5;
+  --secondary-text-color: black;
+  --background-color: #111427;
+}
+
 * {
   margin: 0;
-  color: white
+  color: var(--primery-text-color)
+}
+
+span {
+  color: var(--secondary-text-color);
 }
 
 body {
