@@ -5,7 +5,7 @@ require('dotenv').config()
 
 const app = express()
 const router = require('./server/routes/router')
-mongoose.connect('mongodb://localhost/Bank', {
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/Bank', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
