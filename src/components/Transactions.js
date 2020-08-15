@@ -5,12 +5,16 @@ class Transactions extends Component {
   render() {
 
     return (
-      <div className="transactions">
-        {this.props.transactions.map(t => <Transaction key={t._id} transaction={t} />)}
-      </div>
+      <div id="log-transactions" className="operations">
+        <div className="transactions">
+          {this.props.transactions.map(t => <Transaction id="log-transaction" key={t._id} transaction={t} />)}
+        </div>
+      </div >
     )
   }
 
 }
 
 export default Transactions
+
+

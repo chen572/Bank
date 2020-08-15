@@ -4,7 +4,7 @@ class Transaction extends Component {
   render() {
     const { transaction } = this.props;
     return (
-      <div className='transaction'>
+      <div id={this.props.id} className='transaction'>
         <span className='vendor'>{transaction.vendor}</span>
         <span className='category'>{transaction.category}</span>
         <span className='amount'>{transaction.amount}</span>
