@@ -14,7 +14,6 @@ class Home extends Component {
           <h1>Latest Transactions:</h1>
           <br/>
           <HomeTransactions transactions={this.props.transactions} />
-          {/* <Transactions transactions={this.props.transactions} /> */}
         </div>
       </div>
     )
