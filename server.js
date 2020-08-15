@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const path = require('path')
 require('dotenv').config()
 
 const app = express()
@@ -9,6 +10,8 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/Bank', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
@@ -23,6 +26,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 
 app.use('/', router)
+
+app.get('*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 const { PORT } = process.env
 app.listen(PORT, () => {

@@ -21,7 +21,7 @@ class App extends Component {
   }
 
   async refreshState() {
-    const transactions = await axios.get('http://localhost:3001/transactions');
+    const transactions = await axios.get('/transactions');
     this.setState({
       transactions: transactions.data,
     });
@@ -31,7 +31,7 @@ class App extends Component {
     transaction.amount =
       operation === '+' ? transaction.amount : -transaction.amount;
     if (this.getBalance() - transaction.amount <= 0) {
-      await axios.post('http://localhost:3001/transaction', { transaction });
+      await axios.post('/transaction', { transaction });
       await this.refreshState();
     } else {
       alert('insufficient funds');
